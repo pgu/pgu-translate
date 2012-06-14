@@ -1,4 +1,5 @@
 .settings/
+.classpath
 gwt-unitCache/
 war/pgu_translate/
 war/WEB-INF/classes/
