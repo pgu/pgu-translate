@@ -11,7 +11,10 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import com.google.appengine.api.utils.SystemProperty;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.pgu.translate.client.TranslateService;
 
@@ -21,7 +24,9 @@ import com.pgu.translate.client.TranslateService;
 @SuppressWarnings("serial")
 public class TranslateServiceImpl extends RemoteServiceServlet implements TranslateService {
 
-    private enum CHARSET { //        http://a4esl.org/c/charset.html
+    private static final Logger LOG = Logger.getLogger(TranslateServiceImpl.class.getSimpleName());
+
+    private enum CHARSET { // http://a4esl.org/c/charset.html
         UTF8("UTF-8"), //
         WESTERN("iso-8859-1"), //
         JAPANESE("shift-jis"), //
@@ -103,10 +108,11 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
     @Override
     public HashMap<String, String> translate(final String word, final String source) {
 
-        final HashMap<LG, String> urls = LG.urls(word, source);
+        final boolean isDevelopmentEnvironment = isDevelopmentEnvironment();
 
         final HashMap<String, String> lg2result = new HashMap<String, String>();
 
+        final HashMap<LG, String> urls = LG.urls(word, source);
         for (final Entry<LG, String> e : urls.entrySet()) {
             try {
                 final URL url = new URL(e.getValue());
@@ -124,16 +130,24 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
                 reader.close();
 
                 final String result = sb.toString();
-                System.out.println(result);
+                if (isDevelopmentEnvironment) {
+                    System.out.println(result);
+                }
                 lg2result.put(lg.toString(), result);
 
             } catch (final MalformedURLException ex) {
-                System.out.println(ex);
+                LOG.log(Level.SEVERE, "ouch!", ex);
             } catch (final IOException ex) {
-                System.out.println(ex);
+                LOG.log(Level.SEVERE, "ouch!", ex);
             }
+            // TODO PGU to delete when ui testing is done
+            break; // just one request for testing
         }
         return lg2result;
+    }
+
+    private static boolean isDevelopmentEnvironment() {
+        return SystemProperty.environment.value() != SystemProperty.Environment.Value.Production;
     }
 
 }
