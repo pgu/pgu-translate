@@ -21,18 +21,47 @@ import com.pgu.translate.client.TranslateService;
 @SuppressWarnings("serial")
 public class TranslateServiceImpl extends RemoteServiceServlet implements TranslateService {
 
-    private static final Charset UTF8 = Charset.forName("UTF-8");
-
-    private enum LG {
-        en, fr, es, it, de, ja, cn("zh-CN"), ko, ru, ar;
+    private enum CHARSET { //        http://a4esl.org/c/charset.html
+        UTF8("UTF-8"), //
+        WESTERN("iso-8859-1"), //
+        JAPANESE("shift-jis"), //
+        CHINESE_SIMPLIFIED("EUC-CN"), //
+        KOREAN("euc-kr"), //
+        CYRILLIC("koi8-r"), //
+        ARABIC("iso-8859-6");
 
         private final String code;
 
-        LG() {
-            this(null);
+        CHARSET(final String code) {
+            this.code = code;
         }
 
-        LG(final String code) {
+        public String code() {
+            return code;
+        }
+    }
+
+    private enum LG {
+        en(CHARSET.WESTERN), //
+        fr(CHARSET.WESTERN), //
+        es(CHARSET.WESTERN), //
+        it(CHARSET.WESTERN), //
+        de(CHARSET.WESTERN), //
+        ja(CHARSET.JAPANESE), //
+        cn(CHARSET.CHINESE_SIMPLIFIED, "zh-CN"), //
+        ko(CHARSET.KOREAN), //
+        ru(CHARSET.CYRILLIC), //
+        ar(CHARSET.ARABIC);
+
+        private final String  code;
+        private final CHARSET charset;
+
+        LG(final CHARSET charset) {
+            this(charset, null);
+        }
+
+        LG(final CHARSET charset, final String code) {
+            this.charset = charset;
             this.code = code;
         }
 
@@ -45,7 +74,7 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
                 return "http://translate.google.com/translate_a/t?client=t&hl=en" + //
                         "&sl=" + source + //
                         "&tl=" + (code == null ? this : code) + //
-                        "&text=" + URLEncoder.encode(word, UTF8.name());
+                        "&text=" + URLEncoder.encode(word, CHARSET.UTF8.code());
 
             } catch (final UnsupportedEncodingException e) {
                 throw new IllegalArgumentException(e);
@@ -66,32 +95,8 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
             return urls;
         }
 
-        //        http://a4esl.org/c/charset.html
         public Charset charset() {
-            //            en, fr, es, it, de, ja, cn("zh-CN"), ko, ru, ar;
-            if (this == fr //
-                    || this == de //
-                    || this == es //
-                    || this == it //
-            ) {
-                return Charset.forName("iso-8859-1");
-            }
-            if (this == ja) {
-                return Charset.forName("shift-jis");
-            }
-            if (this == cn) {
-                return Charset.forName("EUC-CN");
-            }
-            if (this == ko) {
-                return Charset.forName("euc-kr");
-            }
-            if (this == ru) {
-                return Charset.forName("iso-8859-5");
-            }
-            if (this == ar) {
-                return Charset.forName("iso-8859-6");
-            }
-            return UTF8;
+            return Charset.forName(charset.code());
         }
     }
 
@@ -116,10 +121,6 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
                 while ((line = reader.readLine()) != null) {
                     sb.append(line);
                 }
-                //                int cp;
-                //                while ((cp = reader.read()) != -1) {
-                //                    sb.append((char) cp);
-                //                }
                 reader.close();
 
                 final String result = sb.toString();

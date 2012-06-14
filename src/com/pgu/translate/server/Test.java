@@ -17,6 +17,7 @@ public class Test {
         System.out.println(Charset.forName("shift-jis"));
         System.out.println(Charset.forName("EUC-CN"));
         System.out.println(Charset.forName("iso-8859-5"));
+        System.out.println(Charset.forName("koi8-r"));
 
     }
 
