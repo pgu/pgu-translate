@@ -4,9 +4,12 @@ import java.util.HashMap;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.pgu.translate.client.ui.TranslateUI;
 import com.pgu.translate.client.ui.TranslateUIPresenter;
 
@@ -38,7 +41,19 @@ public class Pgu_translate implements EntryPoint, TranslateUIPresenter {
         translateUI.setPresenter(this);
         translateUI.setLanguages(lgs.values());
 
-        RootPanel.get().add(translateUI);
+        final VerticalPanel vp = new VerticalPanel();
+        vp.add(translateUI);
+        vp.setWidth("100%");
+        vp.setHeight(Window.getClientHeight() + "px");
+        Window.addResizeHandler(new ResizeHandler() {
+
+            @Override
+            public void onResize(final ResizeEvent event) {
+                final int height = event.getHeight();
+                vp.setHeight(height + "px");
+            }
+        });
+        RootPanel.get().add(vp);
     }
 
     @Override

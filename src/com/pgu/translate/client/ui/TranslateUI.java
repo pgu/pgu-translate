@@ -52,6 +52,11 @@ public class TranslateUI extends Composite {
             final VerticalPanel resultContainer = new VerticalPanel();
             resultContainer.add(resultTitle);
             resultContainer.add(resultBody);
+
+            resultTitle.setWidth("100%");
+            resultBody.setWidth("100%");
+            resultContainer.setWidth("100%");
+
             resultsContainer.add(resultContainer);
 
             lg2panel.put(lg, resultBody);
@@ -124,9 +129,9 @@ public class TranslateUI extends Composite {
     // ]
     // ]
     // ,"en",,[["歓迎",[5],0,0,517,0,1,0]],[["welcome",4,,,""],["welcome",5,[["歓迎",517,0,0],["ようこそ",386,0,0],["ウェルカム",95,0,0],["歓迎さ",0,0,0]],[[0,7]],"welcome"]],,,[["en"]],47]
-    private static native void renderResult(String divId, String json) /*-{
+    private static native void renderResult(String lgName, String json) /*-{
 		var result = eval(json);
-		var container = $wnd.document.getElementById(divId);
+		var container = $wnd.document.getElementById(lgName);
 
 		var resultDom = [];
 
@@ -135,25 +140,81 @@ public class TranslateUI extends Composite {
 			var resultPart = result[i];
 
 			if (i == 0) { // basic translation result
+
+				var basicTsl = [];
 				for ( var j = 0; j < resultPart.length; j++) {
-					resultDom.push("<div style=\"font-size: larger;\">"
-							+ resultPart[j].join(", ") + "</div>");
+					var parts = resultPart[j];
+					for ( var jj = 0; jj < parts.length; jj++) {
+						var part = parts[jj];
+						if (null != part && "" != part) {
+							basicTsl.push(part);
+						}
+					}
 				}
+				var basicTslLabel = basicTsl.join(", ");
+				basicTslLabel = basicTslLabel.substring(0,
+						basicTslLabel.length - 2);
+
+				//en fr es it de ja cn ko ru ar;
+				resultDom
+						.push("" //
+								+ "<div class=\"navbar\">" //
+								+ "  <div class=\"navbar-inner\">" //
+								+ "    <div class=\"container\">" //
+								+ "      <a class=\"btn btn-navbar\" data-toggle=\"collapse\" data-target=\".nav-collapse\">" //
+								+ "        <span class=\"icon-bar\"></span>" //
+								+ "        <span class=\"icon-bar\"></span>" //
+								+ "        <span class=\"icon-bar\"></span>" //
+								+ "      </a>" //
+								//
+								+ "      <a class=\"brand\" href=\"#\"><span class=\"label item_"
+								+ lgName + " fg_bigger\">"
+								+ lgName.toUpperCase()
+								+ "</span><span class=\"fg_white\"> "
+								+ basicTslLabel + "</span></a>" //
+						);
 			} else if (i == 1) { // translations declined by kind (noun, interjection, verbe, ...)
+
+				resultDom.push("" //
+						+ "<div class=\"nav-collapse\">" //
+						+ "  <ul class=\"nav\">" //
+				);
+
 				for ( var j = 0; j < resultPart.length; j++) {
 					var kind = resultPart[j];
 					console.log(kind);
-					resultDom.push("<br/><div><b>" + kind[0] + "</b></div>");
+
+					resultDom.push("<li><a href=\"#\">" + kind[0] + "</a>");
+					resultDom.push("<ul class=\"nav fg_white\">");
+
 					// kind[1] is the list of the translated words
+
 					var kindResults = kind[2]; // array of results
 					for ( var k = 0; k < kindResults.length; k++) {
 						var kindResult = kindResults[k];
-						resultDom.push("<div>" + kindResult[0] + "</div>");
-						resultDom.push("<div style=\"color:grey\">"
-								+ kindResult[1].join(", ") + "</div>");
+						//						resultDom.push("<div>" + kindResult[0] + "</div>");
+						//						resultDom.push("<div style=\"color:grey\">"
+						//								+ kindResult[1].join(", ") + "</div>");
+						resultDom.push("<li><span style=\"font-size:larger\">"
+								+ kindResult[0] + "</span><span style=\"\">  "
+								+ kindResult[1].join(", ") + "</span></li>");
 					}
+					resultDom.push("" //
+							+ "</li>" //
+					);
 				}
+
+				resultDom.push("" //
+						+ "</ul>" //
+						+ "</div>" //
+				);
 			} else {
+				resultDom.push("" //
+						+ "</div>" //
+						+ "</div>" //
+						+ "</div>" //
+				);
+
 				break;
 			}
 
@@ -162,5 +223,38 @@ public class TranslateUI extends Composite {
 		container.innerHTML = resultDom.join("");
 
     }-*/;
+
+    //    <div class="navbar">
+    //      <div class="navbar-inner">
+    //        <div class="container">
+    //          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+    //            <span class="icon-bar"></span>
+    //            <span class="icon-bar"></span>
+    //            <span class="icon-bar"></span>
+    //          </a>
+    //          <a class="brand" href="#"><span class="label bg_orange fg_bigger">IT</span><span class="fg_white"> benvenuto</span></a>
+    //          <div class="nav-collapse">
+    //            <ul class="nav">
+    //              <li>
+    //              <a href="#">name</a>
+    //                  <ul class="nav fg_white">
+    //                    <li><span style="font-size:larger">benvenuto</span><span style="">  welcome</span></li>
+    //                    <li><span style="font-size:larger">benvenuto2</span><span class="">  welcome2</span></li>
+    //                  </ul>
+    //              </li>
+    //              <li>
+    //              <a href="#">interjection</a>
+    //                  <ul class="nav fg_white">
+    //                    <li><span style="font-size:larger">benvenuto2</span><span class="">  welcome2</span></li>
+    //                  </ul>
+    //              </li>
+    //              <li>
+    //              <a href="#">verb</a></li>
+    //            </ul>
+    //          </div>
+    //        </div>
+    //      </div>
+    //    </div>
+    //
 
 }

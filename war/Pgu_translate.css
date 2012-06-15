@@ -32,3 +32,19 @@ h1 {
 #closeButton {
   margin: 15px 6px 6px;
 }
+
+/* en fr es it de ja cn ko ru ar */
+.item_en { background-color: #F89406; }
+.item_fr { background-color: #FF9406; }
+.item_es { background-color: #FC9406; }
+.item_it { background-color: #F39406; }
+.item_de { background-color: #F8F406; }
+.item_ja { background-color: #F8C406; }
+.item_cn { background-color: #F83406; }
+.item_ko { background-color: #F894F6; }
+.item_ru { background-color: #F894C6; }
+.item_ar { background-color: #F89436; }
+
+.fg_bigger { font-size: larger; }
+.fg_white { color: #FFFFFF; }
+
