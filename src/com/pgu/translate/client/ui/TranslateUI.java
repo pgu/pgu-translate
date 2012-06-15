@@ -77,6 +77,7 @@ public class TranslateUI extends Composite {
 
     private void translateWord() {
         inputWord.setEnabled(false);
+        btnSend.setEnabled(false);
 
         final String word = inputWord.getText().trim();
         final String sourceLanguage = source.getValue(source.getSelectedIndex());
@@ -86,10 +87,12 @@ public class TranslateUI extends Composite {
 
     public void resetInput() {
         inputWord.setEnabled(true);
+        btnSend.setEnabled(true);
     }
 
     public void setTranslationResult(final HashMap<String, String> lg2result) {
         inputWord.setEnabled(true);
+        btnSend.setEnabled(true);
         for (final Entry<String, String> e : lg2result.entrySet()) {
             final String lgName = e.getKey();
             lg2panel.get(lgs.valueOf(lgName)).clear();
@@ -233,37 +236,38 @@ public class TranslateUI extends Composite {
 
     }-*/;
 
-    //    <div class="navbar">
-    //      <div class="navbar-inner">
-    //        <div class="container">
-    //          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-    //            <span class="icon-bar"></span>
-    //            <span class="icon-bar"></span>
-    //            <span class="icon-bar"></span>
-    //          </a>
-    //          <a class="brand" href="#"><span class="label bg_orange fg_bigger">IT</span><span class="fg_white"> benvenuto</span></a>
-    //          <div class="nav-collapse">
-    //            <ul class="nav">
-    //              <li>
-    //              <a href="#">name</a>
-    //                  <ul class="nav fg_white">
-    //                    <li><span style="font-size:larger">benvenuto</span><span style="">  welcome</span></li>
-    //                    <li><span style="font-size:larger">benvenuto2</span><span class="">  welcome2</span></li>
-    //                  </ul>
-    //              </li>
-    //              <li>
-    //              <a href="#">interjection</a>
-    //                  <ul class="nav fg_white">
-    //                    <li><span style="font-size:larger">benvenuto2</span><span class="">  welcome2</span></li>
-    //                  </ul>
-    //              </li>
-    //              <li>
-    //              <a href="#">verb</a></li>
-    //            </ul>
-    //          </div>
-    //        </div>
-    //      </div>
-    //    </div>
+    // <div class="navbar">
+    // <div class="navbar-inner">
+    // <div class="container">
+    // <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+    // <span class="icon-bar"></span>
+    // <span class="icon-bar"></span>
+    // <span class="icon-bar"></span>
+    // </a>
+    // <a class="brand" href="#"><span class="label bg_orange fg_bigger">IT</span><span class="fg_white">
+    // benvenuto</span></a>
+    // <div class="nav-collapse">
+    // <ul class="nav">
+    // <li>
+    // <a href="#">name</a>
+    // <ul class="nav fg_white">
+    // <li><span style="font-size:larger">benvenuto</span><span style=""> welcome</span></li>
+    // <li><span style="font-size:larger">benvenuto2</span><span class=""> welcome2</span></li>
+    // </ul>
+    // </li>
+    // <li>
+    // <a href="#">interjection</a>
+    // <ul class="nav fg_white">
+    // <li><span style="font-size:larger">benvenuto2</span><span class=""> welcome2</span></li>
+    // </ul>
+    // </li>
+    // <li>
+    // <a href="#">verb</a></li>
+    // </ul>
+    // </div>
+    // </div>
+    // </div>
+    // </div>
     //
 
 }

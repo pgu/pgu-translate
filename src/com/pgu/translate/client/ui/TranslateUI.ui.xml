@@ -4,11 +4,17 @@
         .full_width {
             width: 100%;
         }
+        .small_width {
+            width: 50px;
+        }
+        .space {
+            margin-right: 5px;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.full_width}">
-        <g:HorizontalPanel addStyleNames="{style.full_width}">
-            <g:TextBox ui:field="inputWord">welcome</g:TextBox>
-            <g:ListBox ui:field="source"></g:ListBox>
+        <g:HorizontalPanel>
+            <g:TextBox ui:field="inputWord" addStyleNames="{style.space}">welcome</g:TextBox>
+            <g:ListBox ui:field="source" addStyleNames="{style.space} {style.small_width}"></g:ListBox>
             <g:Button ui:field="btnSend">>></g:Button>
         </g:HorizontalPanel>
         <g:HTMLPanel ui:field="resultsContainer" addStyleNames="{style.full_width}">
