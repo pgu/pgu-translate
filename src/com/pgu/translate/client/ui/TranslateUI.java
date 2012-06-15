@@ -204,7 +204,8 @@ public class TranslateUI extends Composite {
 						}
 
 						resultDom.push("<li><span style=\"font-size:larger\">"
-								+ kindResult[0] + "</span><span style=\"\">  "
+								+ kindResult[0]
+								+ "</span><span style=\"padding-left:5px;\">  "
 								+ _tsl + "</span></li>");
 					}
 					resultDom.push("" //
