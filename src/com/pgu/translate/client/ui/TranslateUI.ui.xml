@@ -9,6 +9,7 @@
         <g:HorizontalPanel addStyleNames="{style.full_width}">
             <g:TextBox ui:field="inputWord">welcome</g:TextBox>
             <g:ListBox ui:field="source"></g:ListBox>
+            <g:Button ui:field="btnSend">>></g:Button>
         </g:HorizontalPanel>
         <g:HTMLPanel ui:field="resultsContainer" addStyleNames="{style.full_width}">
         </g:HTMLPanel>

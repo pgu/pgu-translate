@@ -4,17 +4,17 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.pgu.translate.client.Pgu_translate.lgs;
 
@@ -31,6 +31,8 @@ public class TranslateUI extends Composite {
     ListBox                               source;
     @UiField
     HTMLPanel                             resultsContainer;
+    @UiField
+    Button                                btnSend;
 
     private final HashMap<lgs, HTMLPanel> lg2panel = new HashMap<lgs, HTMLPanel>();
     private TranslateUIPresenter          presenter;
@@ -45,21 +47,13 @@ public class TranslateUI extends Composite {
 
             final String lgName = lg.toString();
 
-            final Label resultTitle = new Label(lgName);
-            final HTMLPanel resultBody = new HTMLPanel("");
-            resultBody.getElement().setId(lgName);
-
-            final VerticalPanel resultContainer = new VerticalPanel();
-            resultContainer.add(resultTitle);
-            resultContainer.add(resultBody);
-
-            resultTitle.setWidth("100%");
-            resultBody.setWidth("100%");
+            final HTMLPanel resultContainer = new HTMLPanel("");
+            resultContainer.getElement().setId(lgName);
             resultContainer.setWidth("100%");
 
             resultsContainer.add(resultContainer);
 
-            lg2panel.put(lg, resultBody);
+            lg2panel.put(lg, resultContainer);
             source.addItem(lgName);
         }
 
@@ -69,17 +63,25 @@ public class TranslateUI extends Composite {
         this.presenter = presenter;
     }
 
+    @UiHandler("btnSend")
+    public void onClickSend(final ClickEvent event) {
+        translateWord();
+    }
+
     @UiHandler("inputWord")
     public void onKeyPress(final KeyPressEvent event) {
         if (event.getCharCode() == KeyCodes.KEY_ENTER) {
-
-            inputWord.setEnabled(false);
-
-            final String word = inputWord.getText().trim();
-            final String sourceLanguage = source.getValue(source.getSelectedIndex());
-
-            presenter.translate(word, sourceLanguage);
+            translateWord();
         }
+    }
+
+    private void translateWord() {
+        inputWord.setEnabled(false);
+
+        final String word = inputWord.getText().trim();
+        final String sourceLanguage = source.getValue(source.getSelectedIndex());
+
+        presenter.translate(word, sourceLanguage);
     }
 
     public void resetInput() {
@@ -152,8 +154,8 @@ public class TranslateUI extends Composite {
 					}
 				}
 				var basicTslLabel = basicTsl.join(", ");
-				basicTslLabel = basicTslLabel.substring(0,
-						basicTslLabel.length - 2);
+				//				basicTslLabel = basicTslLabel.substring(0,
+				//						basicTslLabel.length - 2);
 
 				//en fr es it de ja cn ko ru ar;
 				resultDom
@@ -182,22 +184,28 @@ public class TranslateUI extends Composite {
 
 				for ( var j = 0; j < resultPart.length; j++) {
 					var kind = resultPart[j];
-					console.log(kind);
 
 					resultDom.push("<li><a href=\"#\">" + kind[0] + "</a>");
 					resultDom.push("<ul class=\"nav fg_white\">");
 
 					// kind[1] is the list of the translated words
-
 					var kindResults = kind[2]; // array of results
 					for ( var k = 0; k < kindResults.length; k++) {
 						var kindResult = kindResults[k];
 						//						resultDom.push("<div>" + kindResult[0] + "</div>");
 						//						resultDom.push("<div style=\"color:grey\">"
 						//								+ kindResult[1].join(", ") + "</div>");
+
+						var _tsl = kindResult[1];
+						if (_tsl == undefined) {
+							_tsl = "";
+						} else {
+							_tsl = kindResult[1].join(", ");
+						}
+
 						resultDom.push("<li><span style=\"font-size:larger\">"
 								+ kindResult[0] + "</span><span style=\"\">  "
-								+ kindResult[1].join(", ") + "</span></li>");
+								+ _tsl + "</span></li>");
 					}
 					resultDom.push("" //
 							+ "</li>" //

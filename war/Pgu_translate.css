@@ -34,17 +34,17 @@ h1 {
 }
 
 /* en fr es it de ja cn ko ru ar */
-.item_en { background-color: #F89406; }
-.item_fr { background-color: #FF9406; }
-.item_es { background-color: #FC9406; }
-.item_it { background-color: #F39406; }
-.item_de { background-color: #F8F406; }
-.item_ja { background-color: #F8C406; }
-.item_cn { background-color: #F83406; }
-.item_ko { background-color: #F894F6; }
-.item_ru { background-color: #F894C6; }
-.item_ar { background-color: #F89436; }
+.item_en { background-color: #F89406 !important; }
+.item_fr { background-color: #3A87AD !important; }
+.item_es { background-color: #B94A48 !important; }
+.item_it { background-color: #F39406 !important; }
+.item_de { background-color: #468847 !important; }
+.item_ja { background-color: #F8C406 !important; }
+.item_cn { background-color: #F83406 !important; }
+.item_ko { background-color: #F894F6 !important; }
+.item_ru { background-color: #F894C6 !important; }
+.item_ar { background-color: #F89436 !important; }
 
-.fg_bigger { font-size: larger; }
-.fg_white { color: #FFFFFF; }
+.fg_bigger { font-size: larger !important; }
+.fg_white { color: #FFFFFF !important; }
 
