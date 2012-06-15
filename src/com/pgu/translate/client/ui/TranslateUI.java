@@ -1,15 +1,19 @@
 package com.pgu.translate.client.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -25,6 +29,24 @@ public class TranslateUI extends Composite {
     interface TranslateUIUiBinder extends UiBinder<Widget, TranslateUI> {
     }
 
+    interface MyStyle extends CssResource {
+        String enabled();
+
+        String disabled();
+
+        String progress0();
+
+        String progress25();
+
+        String progress50();
+
+        String progress75();
+
+        String progress100();
+    }
+
+    @UiField
+    MyStyle                               style;
     @UiField
     TextBox                               inputWord;
     @UiField
@@ -33,12 +55,22 @@ public class TranslateUI extends Composite {
     HTMLPanel                             resultsContainer;
     @UiField
     Anchor                                btnSend;
+    @UiField
+    DivElement                            progressBarContainer, progressBar;
 
-    private final HashMap<lgs, HTMLPanel> lg2panel = new HashMap<lgs, HTMLPanel>();
+    private final HashMap<lgs, HTMLPanel> lg2panel       = new HashMap<lgs, HTMLPanel>();
     private TranslateUIPresenter          presenter;
+
+    private final ArrayList<String>       progressWidths = new ArrayList<String>();
 
     public TranslateUI() {
         initWidget(uiBinder.createAndBindUi(this));
+
+        progressWidths.add(style.progress0());
+        // progressWidths.add(style.progress25());
+        // progressWidths.add(style.progress50());
+        // progressWidths.add(style.progress75());
+        progressWidths.add(style.progress100());
     }
 
     public void setLanguages(final lgs[] languages) {
@@ -75,9 +107,51 @@ public class TranslateUI extends Composite {
         }
     }
 
+    private boolean isProgressOver     = false;
+    private Timer   progressTimer;
+    private int     progressWidthIndex = 0;
+
+    private void runProgressBar() {
+        isProgressOver = false;
+        progressBarContainer.replaceClassName(style.disabled(), style.enabled());
+        progressBar.replaceClassName(style.progress100(), style.progress0());
+
+        progressTimer = new Timer() {
+
+            @Override
+            public void run() {
+
+                if (isProgressOver) {
+                    progressBar.replaceClassName(progressWidths.get(progressWidthIndex), style.progress100());
+
+                    progressWidthIndex = 0;
+                    progressTimer.cancel();
+                    progressTimer = null;
+
+                    progressBarContainer.replaceClassName(style.enabled(), style.disabled());
+
+                } else {
+                    progressTimer.schedule(300);
+                    if (progressWidthIndex == progressWidths.size() - 1) {
+                        progressBar.replaceClassName(progressWidths.get(progressWidthIndex), progressWidths.get(0));
+                        progressWidthIndex = 0;
+                    } else {
+                        progressBar.replaceClassName(progressWidths.get(progressWidthIndex),
+                                progressWidths.get(progressWidthIndex + 1));
+                        progressWidthIndex++;
+                    }
+                }
+
+            }
+
+        };
+        progressTimer.schedule(300);
+    }
+
     private void translateWord() {
+        runProgressBar();
         inputWord.setEnabled(false);
-        // btnSend.setEnabled(false);
+        btnSend.setEnabled(false);
 
         final String word = inputWord.getText().trim();
         final String sourceLanguage = source.getValue(source.getSelectedIndex());
@@ -86,13 +160,16 @@ public class TranslateUI extends Composite {
     }
 
     public void resetInput() {
+        isProgressOver = true;
         inputWord.setEnabled(true);
-        // btnSend.setEnabled(true);
+        btnSend.setEnabled(true);
     }
 
     public void setTranslationResult(final HashMap<String, String> lg2result) {
+        isProgressOver = true;
         inputWord.setEnabled(true);
-        // btnSend.setEnabled(true);
+        btnSend.setEnabled(true);
+
         for (final Entry<String, String> e : lg2result.entrySet()) {
             final String lgName = e.getKey();
             lg2panel.get(lgs.valueOf(lgName)).clear();

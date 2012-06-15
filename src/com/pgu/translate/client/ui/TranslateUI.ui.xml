@@ -1,6 +1,21 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <ui:style>
+    <ui:style type="com.pgu.translate.client.ui.TranslateUI.MyStyle">
+        .progress0 {
+            width: 0% !important;
+        }
+        .progress25 {
+            width: 25% !important;
+        }
+        .progress50 {
+            width: 50% !important;
+        }
+        .progress75 {
+            width: 75% !important;
+        }
+        .progress100 {
+            width: 100% !important;
+        }
         .full_width {
             width: 100%;
         }
@@ -29,9 +44,15 @@
             float: right;
             margin-top: 10px;
         }
-        .resultsContainer {
+        .part {
             float: left;
             margin-top: 10px;
+        }
+        .enabled {
+            display: inline;
+        }
+        .disabled {
+            display: none;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.full_width}">
@@ -42,7 +63,10 @@
               <g:Anchor ui:field="btnSend" href="javascript:void(0)" addStyleNames="btn btn-primary btn-large {style.font_25}">>></g:Anchor>
             </div>
         </g:HTMLPanel>
-        <g:HTMLPanel ui:field="resultsContainer" addStyleNames="{style.full_width} {style.resultsContainer}">
+        <div ui:field="progressBarContainer" class="progress progress-success progress-striped active {style.full_width} {style.part} {style.disabled}">
+          <div ui:field="progressBar" class="bar {style.progress0}"></div>
+        </div>
+        <g:HTMLPanel ui:field="resultsContainer" addStyleNames="{style.full_width} {style.part}">
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder> 

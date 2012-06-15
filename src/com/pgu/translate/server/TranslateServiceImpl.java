@@ -141,7 +141,7 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
                 LOG.log(Level.SEVERE, "ouch!", ex);
             }
             // TODO PGU to delete when ui testing is done
-            //            break; // just one request for testing
+            // break; // just one request for testing
         }
         return lg2result;
     }
