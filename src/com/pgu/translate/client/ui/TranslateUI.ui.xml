@@ -4,20 +4,45 @@
         .full_width {
             width: 100%;
         }
-        .small_width {
-            width: 50px;
+        .font_25 {
+            font-size: 2.5em !important;
         }
         .space {
-            margin-right: 5px;
+            margin-right: 5px !important;
+            margin-top: auto !important;
+            margin-bottom: auto !important;
+            padding-left: 10px !important;
+        }
+        .inputWord {
+            height: 48px !important;
+            width: 97%;
+            float: right;
+        }
+        .selectSource {
+            width: 100px;
+            height: 56px !important;
+        }
+        .toolbar {
+            margin-bottom: 10px;
+        }
+        .float_right {
+            float: right;
+            margin-top: 10px;
+        }
+        .resultsContainer {
+            float: left;
+            margin-top: 10px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.full_width}">
-        <g:HorizontalPanel>
-            <g:TextBox ui:field="inputWord" addStyleNames="{style.space}">welcome</g:TextBox>
-            <g:ListBox ui:field="source" addStyleNames="{style.space} {style.small_width}"></g:ListBox>
-            <g:Button ui:field="btnSend">>></g:Button>
-        </g:HorizontalPanel>
-        <g:HTMLPanel ui:field="resultsContainer" addStyleNames="{style.full_width}">
+        <g:HTMLPanel addStyleNames="{style.toolbar}">
+            <g:TextBox ui:field="inputWord" addStyleNames="{style.space} {style.font_25} {style.inputWord}">welcome</g:TextBox>
+            <div class="{style.float_right}">
+              <g:ListBox ui:field="source" addStyleNames=" {style.selectSource} {style.space} {style.font_25}"></g:ListBox>
+              <g:Anchor ui:field="btnSend" href="javascript:void(0)" addStyleNames="btn btn-primary btn-large {style.font_25}">>></g:Anchor>
+            </div>
+        </g:HTMLPanel>
+        <g:HTMLPanel ui:field="resultsContainer" addStyleNames="{style.full_width} {style.resultsContainer}">
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder> 

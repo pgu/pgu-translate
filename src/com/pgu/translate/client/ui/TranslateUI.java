@@ -10,7 +10,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -32,7 +32,7 @@ public class TranslateUI extends Composite {
     @UiField
     HTMLPanel                             resultsContainer;
     @UiField
-    Button                                btnSend;
+    Anchor                                btnSend;
 
     private final HashMap<lgs, HTMLPanel> lg2panel = new HashMap<lgs, HTMLPanel>();
     private TranslateUIPresenter          presenter;
@@ -77,7 +77,7 @@ public class TranslateUI extends Composite {
 
     private void translateWord() {
         inputWord.setEnabled(false);
-        btnSend.setEnabled(false);
+        // btnSend.setEnabled(false);
 
         final String word = inputWord.getText().trim();
         final String sourceLanguage = source.getValue(source.getSelectedIndex());
@@ -87,12 +87,12 @@ public class TranslateUI extends Composite {
 
     public void resetInput() {
         inputWord.setEnabled(true);
-        btnSend.setEnabled(true);
+        // btnSend.setEnabled(true);
     }
 
     public void setTranslationResult(final HashMap<String, String> lg2result) {
         inputWord.setEnabled(true);
-        btnSend.setEnabled(true);
+        // btnSend.setEnabled(true);
         for (final Entry<String, String> e : lg2result.entrySet()) {
             final String lgName = e.getKey();
             lg2panel.get(lgs.valueOf(lgName)).clear();
