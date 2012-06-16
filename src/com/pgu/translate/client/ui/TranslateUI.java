@@ -110,13 +110,11 @@ public class TranslateUI extends Composite {
         }
     }
 
-    private boolean isProgressOver   = false;
-    private Timer   progressTimer;
-    private Timer   progressTimerEnd;
-    private int     progressWidthIdx = 0;
+    private Timer progressTimer;
+    private Timer progressTimerEnd;
+    private int   progressWidthCount = 0;
 
     private void runProgressBar() {
-        isProgressOver = false;
         progressBarContainer.replaceClassName(style.disabled(), style.enabled());
         progressBar.replaceClassName(style.progress100(), style.progress0());
 
@@ -124,42 +122,41 @@ public class TranslateUI extends Composite {
 
             @Override
             public void run() {
-
-                if (isProgressOver) {
-                    progressBar.replaceClassName(progressWidths.get(progressWidthIdx), style.progress100());
-
-                    progressTimerEnd = new Timer() {
-
-                        @Override
-                        public void run() {
-                            progressWidthIdx = 0;
-                            progressBarContainer.replaceClassName(style.enabled(), style.disabled());
-
-                            progressTimer.cancel();
-                            progressTimerEnd.cancel();
-                            progressTimer = null;
-                            progressTimerEnd = null;
-                        }
-
-                    };
-                    progressTimerEnd.schedule(1000);
-
-                } else {
-                    if (progressWidthIdx == progressWidths.size() - 1) {
-                        progressBar.replaceClassName(progressWidths.get(progressWidthIdx), progressWidths.get(0));
-                        progressWidthIdx = 0;
-                    } else {
-                        progressBar.replaceClassName(progressWidths.get(progressWidthIdx),
-                                progressWidths.get(progressWidthIdx + 1));
-                        progressWidthIdx++;
-                    }
-                    progressTimer.schedule(1000);
-                }
-
+                progressBar.replaceClassName(progressCurrent(), progressNext());
+                progressTimer.schedule(1000);
             }
 
         };
-        progressTimer.schedule(500);
+        progressTimer.schedule(300);
+    }
+
+    private String progressCurrent() {
+        return progressWidths.get(progressWidthCount % progressWidths.size());
+    }
+
+    private String progressNext() {
+        return progressWidths.get(++progressWidthCount % progressWidths.size());
+    }
+
+    private void stopProgressBar() {
+        progressTimer.cancel();
+        progressTimer = null;
+
+        progressBar.replaceClassName(progressCurrent(), style.progress100());
+
+        progressTimerEnd = new Timer() {
+
+            @Override
+            public void run() {
+                progressWidthCount = 0;
+                progressBarContainer.replaceClassName(style.enabled(), style.disabled());
+
+                progressTimerEnd.cancel();
+                progressTimerEnd = null;
+            }
+
+        };
+        progressTimerEnd.schedule(500);
     }
 
     private void translateWord() {
@@ -174,7 +171,7 @@ public class TranslateUI extends Composite {
     }
 
     public void resetInput() {
-        isProgressOver = true;
+        stopProgressBar();
         inputWord.setEnabled(true);
         btnSend.setEnabled(true);
 
@@ -184,7 +181,7 @@ public class TranslateUI extends Composite {
     }
 
     public void setTranslationResult(final HashMap<String, String> lg2result) {
-        isProgressOver = true;
+        stopProgressBar();
         inputWord.setEnabled(true);
         btnSend.setEnabled(true);
 
