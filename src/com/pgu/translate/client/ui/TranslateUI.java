@@ -266,9 +266,10 @@ public class TranslateUI extends Composite {
 										+ "      </a>" //
 										//
 										+ "      <a class=\"brand\" href=\"javascript:void(0);\"><span class=\"label item_"
-										+ lgName + " fg_bigger\">"
+										+ lgName
+										+ " fg_bigger\">"
 										+ lgName.toUpperCase()
-										+ "</span><span class=\"fg_white\"> "
+										+ "</span><span class=\"fg_white fg_font_25\"> "
 										+ basicTslLabel + "</span></a>" //
 								);
 					}
@@ -309,7 +310,7 @@ public class TranslateUI extends Composite {
 											}
 
 											resultDom
-													.push("<li><span style=\"font-size:larger\">"
+													.push("<li style=\"line-height:25px\"><span style=\"font-size:larger\">"
 															+ kindResult[0]
 															+ "</span><span style=\"padding-left:5px;\">  "
 															+ _tsl
