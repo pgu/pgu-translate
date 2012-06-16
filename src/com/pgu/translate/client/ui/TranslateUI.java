@@ -36,11 +36,13 @@ public class TranslateUI extends Composite {
 
         String progress0();
 
-        String progress25();
+        String progress20();
 
-        String progress50();
+        String progress40();
 
-        String progress75();
+        String progress60();
+
+        String progress80();
 
         String progress100();
     }
@@ -67,9 +69,10 @@ public class TranslateUI extends Composite {
         initWidget(uiBinder.createAndBindUi(this));
 
         progressWidths.add(style.progress0());
-        // progressWidths.add(style.progress25());
-        // progressWidths.add(style.progress50());
-        // progressWidths.add(style.progress75());
+        progressWidths.add(style.progress20());
+        progressWidths.add(style.progress40());
+        progressWidths.add(style.progress60());
+        progressWidths.add(style.progress80());
         progressWidths.add(style.progress100());
     }
 
@@ -107,9 +110,10 @@ public class TranslateUI extends Composite {
         }
     }
 
-    private boolean isProgressOver     = false;
+    private boolean isProgressOver   = false;
     private Timer   progressTimer;
-    private int     progressWidthIndex = 0;
+    private Timer   progressTimerEnd;
+    private int     progressWidthIdx = 0;
 
     private void runProgressBar() {
         isProgressOver = false;
@@ -122,30 +126,40 @@ public class TranslateUI extends Composite {
             public void run() {
 
                 if (isProgressOver) {
-                    progressBar.replaceClassName(progressWidths.get(progressWidthIndex), style.progress100());
+                    progressBar.replaceClassName(progressWidths.get(progressWidthIdx), style.progress100());
 
-                    progressWidthIndex = 0;
-                    progressTimer.cancel();
-                    progressTimer = null;
+                    progressTimerEnd = new Timer() {
 
-                    progressBarContainer.replaceClassName(style.enabled(), style.disabled());
+                        @Override
+                        public void run() {
+                            progressWidthIdx = 0;
+                            progressBarContainer.replaceClassName(style.enabled(), style.disabled());
+
+                            progressTimer.cancel();
+                            progressTimerEnd.cancel();
+                            progressTimer = null;
+                            progressTimerEnd = null;
+                        }
+
+                    };
+                    progressTimerEnd.schedule(1000);
 
                 } else {
-                    progressTimer.schedule(300);
-                    if (progressWidthIndex == progressWidths.size() - 1) {
-                        progressBar.replaceClassName(progressWidths.get(progressWidthIndex), progressWidths.get(0));
-                        progressWidthIndex = 0;
+                    if (progressWidthIdx == progressWidths.size() - 1) {
+                        progressBar.replaceClassName(progressWidths.get(progressWidthIdx), progressWidths.get(0));
+                        progressWidthIdx = 0;
                     } else {
-                        progressBar.replaceClassName(progressWidths.get(progressWidthIndex),
-                                progressWidths.get(progressWidthIndex + 1));
-                        progressWidthIndex++;
+                        progressBar.replaceClassName(progressWidths.get(progressWidthIdx),
+                                progressWidths.get(progressWidthIdx + 1));
+                        progressWidthIdx++;
                     }
+                    progressTimer.schedule(1000);
                 }
 
             }
 
         };
-        progressTimer.schedule(300);
+        progressTimer.schedule(500);
     }
 
     private void translateWord() {
@@ -163,6 +177,10 @@ public class TranslateUI extends Composite {
         isProgressOver = true;
         inputWord.setEnabled(true);
         btnSend.setEnabled(true);
+
+        for (final HTMLPanel panel : lg2panel.values()) {
+            panel.clear();
+        }
     }
 
     public void setTranslationResult(final HashMap<String, String> lg2result) {
@@ -217,96 +235,113 @@ public class TranslateUI extends Composite {
 
 		var resultDom = [];
 
-		for ( var i = 0; i < result.length; i++) {
+		if (result instanceof Array) {
+			for ( var i = 0; i < result.length; i++) {
 
-			var resultPart = result[i];
+				var resultPart = result[i];
 
-			if (i == 0) { // basic translation result
+				if (i == 0) { // basic translation result
 
-				var basicTsl = [];
-				for ( var j = 0; j < resultPart.length; j++) {
-					var parts = resultPart[j];
-					for ( var jj = 0; jj < parts.length; jj++) {
-						var part = parts[jj];
-						if (null != part && "" != part) {
-							basicTsl.push(part);
+					var basicTsl = [];
+					if (resultPart instanceof Array) {
+						for ( var j = 0; j < resultPart.length; j++) {
+							var parts = resultPart[j];
+							if (parts instanceof Array) {
+								for ( var jj = 0; jj < parts.length; jj++) {
+									var part = parts[jj];
+									if (null != part && "" != part) {
+										basicTsl.push(part);
+									}
+								}
+							}
 						}
+						var basicTslLabel = basicTsl.join(", ");
+
+						resultDom
+								.push("" //
+										+ "<div class=\"navbar\">" //
+										+ "  <div class=\"navbar-inner\">" //
+										+ "    <div class=\"container\">" //
+										+ "      <a class=\"btn btn-navbar\" data-toggle=\"collapse\" data-target=\".nav-collapse\">" //
+										+ "        <span class=\"icon-bar\"></span>" //
+										+ "        <span class=\"icon-bar\"></span>" //
+										+ "        <span class=\"icon-bar\"></span>" //
+										+ "      </a>" //
+										//
+										+ "      <a class=\"brand\" href=\"javascript:void(0);\"><span class=\"label item_"
+										+ lgName + " fg_bigger\">"
+										+ lgName.toUpperCase()
+										+ "</span><span class=\"fg_white\"> "
+										+ basicTslLabel + "</span></a>" //
+								);
 					}
-				}
-				var basicTslLabel = basicTsl.join(", ");
-				//				basicTslLabel = basicTslLabel.substring(0,
-				//						basicTslLabel.length - 2);
+				} else if (i == 1) { // translations declined by kind (noun, interjection, verbe, ...)
 
-				//en fr es it de ja cn ko ru ar;
-				resultDom
-						.push("" //
-								+ "<div class=\"navbar\">" //
-								+ "  <div class=\"navbar-inner\">" //
-								+ "    <div class=\"container\">" //
-								+ "      <a class=\"btn btn-navbar\" data-toggle=\"collapse\" data-target=\".nav-collapse\">" //
-								+ "        <span class=\"icon-bar\"></span>" //
-								+ "        <span class=\"icon-bar\"></span>" //
-								+ "        <span class=\"icon-bar\"></span>" //
-								+ "      </a>" //
-								//
-								+ "      <a class=\"brand\" href=\"#\"><span class=\"label item_"
-								+ lgName + " fg_bigger\">"
-								+ lgName.toUpperCase()
-								+ "</span><span class=\"fg_white\"> "
-								+ basicTslLabel + "</span></a>" //
-						);
-			} else if (i == 1) { // translations declined by kind (noun, interjection, verbe, ...)
-
-				resultDom.push("" //
-						+ "<div class=\"nav-collapse\">" //
-						+ "  <ul class=\"nav\">" //
-				);
-
-				for ( var j = 0; j < resultPart.length; j++) {
-					var kind = resultPart[j];
-
-					resultDom.push("<li><a href=\"#\">" + kind[0] + "</a>");
-					resultDom.push("<ul class=\"nav fg_white\">");
-
-					// kind[1] is the list of the translated words
-					var kindResults = kind[2]; // array of results
-					for ( var k = 0; k < kindResults.length; k++) {
-						var kindResult = kindResults[k];
-						//						resultDom.push("<div>" + kindResult[0] + "</div>");
-						//						resultDom.push("<div style=\"color:grey\">"
-						//								+ kindResult[1].join(", ") + "</div>");
-
-						var _tsl = kindResult[1];
-						if (_tsl == undefined) {
-							_tsl = "";
-						} else {
-							_tsl = kindResult[1].join(", ");
-						}
-
-						resultDom.push("<li><span style=\"font-size:larger\">"
-								+ kindResult[0]
-								+ "</span><span style=\"padding-left:5px;\">  "
-								+ _tsl + "</span></li>");
-					}
 					resultDom.push("" //
-							+ "</li>" //
+							+ "<div class=\"nav-collapse\">" //
+							+ "  <ul class=\"nav\">" //
 					);
+
+					if (resultPart instanceof Array) {
+						for ( var j = 0; j < resultPart.length; j++) {
+							var kind = resultPart[j];
+
+							if (kind instanceof Array && kind.length >= 3) {
+								resultDom
+										.push("<li><a href=\"javascript:void(0);\">"
+												+ kind[0] + "</a>");
+								resultDom.push("<ul class=\"nav fg_white\">");
+
+								// kind[1] is the list of the translated words
+								var kindResults = kind[2]; // array of results
+								if (kindResults instanceof Array) {
+									for ( var k = 0; k < kindResults.length; k++) {
+										var kindResult = kindResults[k];
+										//						resultDom.push("<div>" + kindResult[0] + "</div>");
+										//						resultDom.push("<div style=\"color:grey\">"
+										//								+ kindResult[1].join(", ") + "</div>");
+
+										if (kindResult instanceof Array
+												&& kindResult.length >= 2) {
+
+											var _tsl = kindResult[1];
+											if (_tsl == undefined) {
+												_tsl = "";
+											} else {
+												_tsl = kindResult[1].join(", ");
+											}
+
+											resultDom
+													.push("<li><span style=\"font-size:larger\">"
+															+ kindResult[0]
+															+ "</span><span style=\"padding-left:5px;\">  "
+															+ _tsl
+															+ "</span></li>");
+										}
+									}
+								}
+								resultDom.push("" //
+										+ "</li>" //
+								);
+							}
+						}
+					}
+
+					resultDom.push("" //
+							+ "</ul>" //
+							+ "</div>" //
+					);
+				} else {
+					resultDom.push("" //
+							+ "</div>" //
+							+ "</div>" //
+							+ "</div>" //
+					);
+
+					break;
 				}
 
-				resultDom.push("" //
-						+ "</ul>" //
-						+ "</div>" //
-				);
-			} else {
-				resultDom.push("" //
-						+ "</div>" //
-						+ "</div>" //
-						+ "</div>" //
-				);
-
-				break;
 			}
-
 		}
 
 		container.innerHTML = resultDom.join("");

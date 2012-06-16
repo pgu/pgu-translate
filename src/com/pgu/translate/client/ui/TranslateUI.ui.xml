@@ -4,14 +4,17 @@
         .progress0 {
             width: 0% !important;
         }
-        .progress25 {
-            width: 25% !important;
+        .progress20 {
+            width: 20% !important;
         }
-        .progress50 {
-            width: 50% !important;
+        .progress40 {
+            width: 40% !important;
         }
-        .progress75 {
-            width: 75% !important;
+        .progress60 {
+            width: 60% !important;
+        }
+        .progress80 {
+            width: 80% !important;
         }
         .progress100 {
             width: 100% !important;
