@@ -79,7 +79,7 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
                 return "http://translate.google.com/translate_a/t?client=t&hl=en" + //
                         "&sl=" + source + //
                         "&tl=" + (code == null ? this : code) + //
-                        "&text=" + URLEncoder.encode(word, CHARSET.UTF8.code());
+                        "&text=" + URLEncoder.encode(word, CHARSET.WESTERN.code());
 
             } catch (final UnsupportedEncodingException e) {
                 throw new IllegalArgumentException(e);
