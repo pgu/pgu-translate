@@ -2,7 +2,6 @@ package com.pgu.translate.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -13,6 +12,8 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
@@ -48,22 +49,22 @@ public class TranslateUI extends Composite {
     }
 
     @UiField
-    MyStyle                               style;
+    MyStyle                         style;
     @UiField
-    TextBox                               inputWord;
+    TextBox                         inputWord;
     @UiField
-    ListBox                               source;
+    ListBox                         source;
     @UiField
-    HTMLPanel                             resultsContainer;
+    HTMLPanel                       resultsContainer;
     @UiField
-    Anchor                                btnSend;
+    Anchor                          btnSend;
     @UiField
-    DivElement                            progressBarContainer, progressBar;
+    DivElement                      progressBarContainer, progressBar;
 
-    private final HashMap<lgs, HTMLPanel> lg2panel       = new HashMap<lgs, HTMLPanel>();
-    private TranslateUIPresenter          presenter;
+    private final ArrayList<String> resultContainerIds = new ArrayList<String>();
+    private TranslateUIPresenter    presenter;
 
-    private final ArrayList<String>       progressWidths = new ArrayList<String>();
+    private final ArrayList<String> progressWidths     = new ArrayList<String>();
 
     public TranslateUI() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -77,6 +78,9 @@ public class TranslateUI extends Composite {
     }
 
     public void setLanguages(final lgs[] languages) {
+        resultContainerIds.clear();
+        source.clear();
+        resultsContainer.clear();
 
         for (final lgs lg : languages) {
 
@@ -86,9 +90,9 @@ public class TranslateUI extends Composite {
             resultContainer.getElement().setId(lgName);
             resultContainer.setWidth("100%");
 
+            resultContainerIds.add(lgName);
             resultsContainer.add(resultContainer);
 
-            lg2panel.put(lg, resultContainer);
             source.addItem(lgName);
         }
 
@@ -175,8 +179,8 @@ public class TranslateUI extends Composite {
         inputWord.setEnabled(true);
         btnSend.setEnabled(true);
 
-        for (final HTMLPanel panel : lg2panel.values()) {
-            panel.clear();
+        for (final String containerId : resultContainerIds) {
+            cleanContainerResult(containerId);
         }
     }
 
@@ -185,13 +189,23 @@ public class TranslateUI extends Composite {
         inputWord.setEnabled(true);
         btnSend.setEnabled(true);
 
-        for (final Entry<String, String> e : lg2result.entrySet()) {
-            final String lgName = e.getKey();
-            lg2panel.get(lgs.valueOf(lgName)).clear();
+        for (final String containerId : resultContainerIds) {
 
-            renderResult(lgName, e.getValue());
+            cleanContainerResult(containerId);
+
+            if (lg2result.containsKey(containerId)) {
+                renderResult(containerId, lg2result.get(containerId));
+            }
         }
 
+    }
+
+    private void cleanContainerResult(final String lgName) {
+        final Element container = DOM.getElementById(lgName);
+        final int count = container.getChildCount();
+        for (int i = count - 1; i >= 0; i--) {
+            container.removeChild(container.getChild(i));
+        }
     }
 
     // [
