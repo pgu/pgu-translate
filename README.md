@@ -1,5 +1,6 @@
 <html>
-	<body>
+<head></head>
+<body>
 
 <p>
 	<strong>Purpose</strong><br/>
@@ -14,5 +15,5 @@
 	<a href="http://pgu-translate.appspot.com/"><strong>Link to the website</strong></a>
 </p>
 
-	</body>
+</body>
 </html>
