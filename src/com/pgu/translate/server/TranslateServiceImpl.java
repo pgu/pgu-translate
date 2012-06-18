@@ -95,7 +95,10 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
                 // trick to get the proper encoding!
                 connection
                         .setRequestProperty("User-Agent",
-                                "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1");
+                                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.56 Safari/536.5");
+                //                connection
+                //                .setRequestProperty("User-Agent",
+                //                        "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1");
 
                 final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(),
                         UTF8));
