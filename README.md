@@ -12,7 +12,7 @@
 			Bootstrap, GWT, JSNI, App Engine
 </p>
 <p>
-	<a href="http://pgu-translate.appspot.com/"><strong>Link to the website</strong></a>
+	<a href="http://pgu-translate.appspot.com/"><strong>&#8594; Go to the website</strong></a>
 </p>
 
 </body>
