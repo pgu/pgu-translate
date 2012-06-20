@@ -62,7 +62,8 @@ public class Pgu_translate implements EntryPoint, TranslateUIPresenter {
             translateUI.resetInput();
             return;
         }
-        service.translate(wordToTranslate.trim(), sourceLanguage, new AsyncCallback<HashMap<String, String>>() {
+        final String wordToTranslateValid = wordToTranslate.trim();
+        service.translate(wordToTranslateValid, sourceLanguage, new AsyncCallback<HashMap<String, String>>() {
 
             @Override
             public void onFailure(final Throwable caught) {
@@ -72,7 +73,7 @@ public class Pgu_translate implements EntryPoint, TranslateUIPresenter {
 
             @Override
             public void onSuccess(final HashMap<String, String> lg2result) {
-                translateUI.setTranslationResult(lg2result);
+                translateUI.setTranslationResult(wordToTranslateValid, lg2result);
             }
 
         });

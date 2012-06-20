@@ -184,7 +184,7 @@ public class TranslateUI extends Composite {
         }
     }
 
-    public void setTranslationResult(final HashMap<String, String> lg2result) {
+    public void setTranslationResult(final String wordToTranslateValid, final HashMap<String, String> lg2result) {
         stopProgressBar();
         inputWord.setEnabled(true);
         btnSend.setEnabled(true);
@@ -194,7 +194,7 @@ public class TranslateUI extends Composite {
             cleanContainerResult(containerId);
 
             if (lg2result.containsKey(containerId)) {
-                renderResult(containerId, lg2result.get(containerId));
+                renderResult(wordToTranslateValid, containerId, lg2result.get(containerId));
             }
         }
 
@@ -240,7 +240,7 @@ public class TranslateUI extends Composite {
     // ]
     // ]
     // ,"en",,[["歓迎",[5],0,0,517,0,1,0]],[["welcome",4,,,""],["welcome",5,[["歓迎",517,0,0],["ようこそ",386,0,0],["ウェルカム",95,0,0],["歓迎さ",0,0,0]],[[0,7]],"welcome"]],,,[["en"]],47]
-    private static native void renderResult(String lgName, String json) /*-{
+    private static native void renderResult(String searchWord, String lgName, String json) /*-{
 		var result = eval(json);
 		var container = $wnd.document.getElementById(lgName);
 
@@ -260,7 +260,8 @@ public class TranslateUI extends Composite {
 							if (parts instanceof Array) {
 								for ( var jj = 0; jj < parts.length; jj++) {
 									var part = parts[jj];
-									if (null != part && "" != part) {
+									if (null != part && "" != part
+											&& searchWord != part) {
 										basicTsl.push(part);
 									}
 								}
