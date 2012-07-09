@@ -325,15 +325,16 @@ public class TranslateUI extends Composite {
 											}
 
 											resultDom
-													.push("<li style=\"line-height:25px\"><span style=\"font-size:larger\">"
+													.push("<div style=\"line-height:25px\"><span style=\"font-size:larger;\">"
 															+ kindResult[0]
-															+ "</span><span style=\"padding-left:5px;\">  "
+															+ "</span><span style=\"padding-left:5px;color:#E1E1E1\">  "
 															+ _tsl
-															+ "</span></li>");
+															+ "</span></div>");
 										}
 									}
 								}
 								resultDom.push("" //
+										+ "</ul>" //
 										+ "</li>" //
 								);
 							}
