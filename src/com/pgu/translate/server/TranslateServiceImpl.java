@@ -51,7 +51,7 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
         public String q(final String word, final LG source) {
             try {
                 return "http://translate.google.com/translate_a/t?client=t&hl=en" + //
-                        "&sl=" + source + //
+                        "&sl=" + (source == null ? "auto" : source) + //
                         "&tl=" + (code == null ? this : code) + //
                         "&text=" + URLEncoder.encode(word, UTF8);
 
@@ -118,8 +118,11 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
 
             } catch (final MalformedURLException ex) {
                 LOG.log(Level.SEVERE, "ouch!", ex);
+                throw new RuntimeException(ex);
+
             } catch (final IOException ex) {
                 LOG.log(Level.SEVERE, "ouch!", ex);
+                throw new RuntimeException(ex);
             }
             // TODO PGU to delete when ui testing is done
             // break; // just one request for testing
@@ -129,6 +132,77 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
 
     private static boolean isDevelopmentEnvironment() {
         return SystemProperty.environment.value() != SystemProperty.Environment.Value.Production;
+    }
+
+    @Override
+    public String detectLanguage(final String word) {
+        final boolean isDevelopmentEnvironment = isDevelopmentEnvironment();
+
+        final String _url = LG.en.q(word, null);
+        try {
+            final URL url = new URL(_url);
+            final URLConnection connection = url.openConnection();
+            connection
+                    .setRequestProperty("User-Agent",
+                            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.56 Safari/536.5");
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), UTF8));
+
+            final String line = reader.readLine();
+            reader.close();
+
+            final String lg = extractDetectedLanguage(line);
+
+            if (isDevelopmentEnvironment) {
+                System.out.println("lg: " + lg);
+            }
+
+            try {
+                LG.valueOf(lg);
+                return lg;
+
+            } catch (final IllegalArgumentException e) {
+                return "";
+            }
+
+        } catch (final MalformedURLException e) {
+            LOG.log(Level.SEVERE, "ouch!", e);
+            throw new RuntimeException(e);
+
+        } catch (final IOException e) {
+            LOG.log(Level.SEVERE, "ouch!", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String extractDetectedLanguage(final String s) {
+        int counterSlot = 0;
+        int counterSqBracket = 0;
+        boolean startsRecord = false;
+        final int length = s.length();
+        final StringBuffer sb = new StringBuffer();
+
+        for (int i = 0; i < length; i++) {
+            final char c = s.charAt(i);
+            if (c == '[') {
+                counterSqBracket++;
+            } else if (c == ']') {
+                counterSqBracket--;
+            } else if (c == ',') {
+                if (counterSqBracket == 1) {
+                    counterSlot++;
+                    startsRecord = counterSlot == 2;
+                }
+            } else if (c == '"') {
+                continue;
+            } else {
+                if (startsRecord) {
+                    sb.append(c);
+                }
+            }
+
+        }
+
+        return sb.toString();
     }
 
 }

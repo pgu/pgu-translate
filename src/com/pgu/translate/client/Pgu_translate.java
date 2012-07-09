@@ -1,6 +1,7 @@
 package com.pgu.translate.client;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -18,6 +19,7 @@ import com.pgu.translate.client.ui.TranslateUIPresenter;
  */
 public class Pgu_translate implements EntryPoint, TranslateUIPresenter {
 
+    private final Logger                logger  = Logger.getLogger("Pgu_translate");
     private final TranslateServiceAsync service = GWT.create(TranslateService.class);
 
     public enum lgs {
@@ -81,6 +83,27 @@ public class Pgu_translate implements EntryPoint, TranslateUIPresenter {
 
     private boolean isValidWordToTranslate(final String wordToTranslate) {
         return !wordToTranslate.trim().isEmpty();
+    }
+
+    @Override
+    public void detectLanguage(final String text) {
+        if (!isValidWordToTranslate(text)) {
+            return;
+        }
+
+        final String textValid = text.trim();
+        service.detectLanguage(textValid, new AsyncCallback<String>() {
+
+            @Override
+            public void onFailure(final Throwable caught) {
+                logger.warning("Failure for the text: " + textValid + ", throwable: " + caught.getMessage());
+            }
+
+            @Override
+            public void onSuccess(final String lg) {
+                translateUI.setDetectedLanguage(text, lg);
+            }
+        });
     }
 
 }

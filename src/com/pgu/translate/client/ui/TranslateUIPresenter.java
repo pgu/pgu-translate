@@ -4,4 +4,6 @@ public interface TranslateUIPresenter {
 
     void translate(String wordToTranslate, String sourceLanguage);
 
+    void detectLanguage(String text);
+
 }

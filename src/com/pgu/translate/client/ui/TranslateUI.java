@@ -8,6 +8,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -112,6 +113,20 @@ public class TranslateUI extends Composite {
         if (event.getCharCode() == KeyCodes.KEY_ENTER) {
             translateWord();
         }
+    }
+
+    private String previousText = "";
+
+    @UiHandler("inputWord")
+    public void onKeyUp(final KeyUpEvent event) {
+        final String text = inputWord.getText();
+
+        if (previousText.equals(text)) {
+            return;
+        }
+
+        presenter.detectLanguage(text);
+        previousText = text;
     }
 
     private Timer progressTimer;
@@ -361,6 +376,20 @@ public class TranslateUI extends Composite {
 		container.innerHTML = resultDom.join("");
 
     }-*/;
+
+    public void setDetectedLanguage(final String text, final String lg) {
+        if (!text.equals(inputWord.getText())) {
+            return;
+        }
+
+        for (int i = 0; i < source.getItemCount(); i++) {
+            if (lg.equals(source.getValue(i))) {
+                source.setSelectedIndex(i);
+                break;
+            }
+        }
+
+    }
 
     // <div class="navbar">
     // <div class="navbar-inner">

@@ -11,4 +11,6 @@ public interface TranslateServiceAsync {
 
     void translate(String text, String source, AsyncCallback<HashMap<String, String>> asyncCallback);
 
+    void detectLanguage(String textValid, AsyncCallback<String> asyncCallback);
+
 }

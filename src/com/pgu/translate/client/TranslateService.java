@@ -13,4 +13,6 @@ public interface TranslateService extends RemoteService {
 
     HashMap<String, String> translate(String text, String source);
 
+    String detectLanguage(String textValid);
+
 }
