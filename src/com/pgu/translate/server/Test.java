@@ -51,7 +51,7 @@ public class Test {
         //        final String word = "école";
         //        final String word = URLEncoder.encode("école", CS_WEST);
 
-        enumTest.valueOf(""); // IllegalArgumentException
+        //        enumTest.valueOf(""); // IllegalArgumentException
 
         final String s1 = "[[[\"welcome\",\"welcome\",\"\",\"\"]],,\"en\",,,,,,[[\"en\"]],0]";
         final String s2 = "[[[\"b\",\"b\",\"\",\"\"]],,\"en\",,,,,,,0]";
@@ -86,7 +86,12 @@ public class Test {
                 } else {
                     if (startsRecord) {
                         sb.append(c);
+                    } else {
+                        if (counterSlot > 2) {
+                            break;
+                        }
                     }
+
                 }
 
             }

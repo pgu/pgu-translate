@@ -197,6 +197,10 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
             } else {
                 if (startsRecord) {
                     sb.append(c);
+                } else {
+                    if (counterSlot > 2) {
+                        break;
+                    }
                 }
             }
 
