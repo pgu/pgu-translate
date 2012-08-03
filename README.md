@@ -9,7 +9,7 @@
 </p>
 <p>
 			<strong>Technologies</strong><br/>
-			Bootstrap, GWT, JSNI, App Engine and its URL Fetch service (async version)
+			Bootstrap, GWT, JSNI, App Engine and its URL Fetch service (<i>async</i> version)
 </p>
 <p>
 	<a href="http://pgu-translate.appspot.com/"><strong>&#8594; Go to the website</strong></a>
