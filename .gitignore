@@ -3,3 +3,4 @@ gwt-unitCache/
 war/pgu_translate/
 war/WEB-INF/classes/
 war/WEB-INF/deploy/
+war/WEB-INF/lib/

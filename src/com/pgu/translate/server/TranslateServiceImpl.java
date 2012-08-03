@@ -1,6 +1,7 @@
 package com.pgu.translate.server;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -8,11 +9,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.appengine.api.urlfetch.HTTPHeader;
+import com.google.appengine.api.urlfetch.HTTPRequest;
+import com.google.appengine.api.urlfetch.HTTPResponse;
+import com.google.appengine.api.urlfetch.URLFetchService;
+import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.pgu.translate.client.TranslateService;
@@ -81,70 +90,111 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
     public HashMap<String, String> translate(final String word, final String source) {
 
         final boolean isDevelopmentEnvironment = isDevelopmentEnvironment();
+        final URLFetchService service = getUrlFetchService();
 
-        final HashMap<String, String> lg2result = new HashMap<String, String>();
+        final ArrayList<Future<HTTPResponse>> futures = new ArrayList<Future<HTTPResponse>>();
+        final HashMap<Future<HTTPResponse>, LG> future2lg = new HashMap<Future<HTTPResponse>, LG>();
 
-        final HashMap<LG, String> urls = LG.urls(word, source);
-        for (final Entry<LG, String> e : urls.entrySet()) {
+        for (final Entry<LG, String> lg2url : LG.urls(word, source).entrySet()) {
             try {
-                final LG lg = e.getKey();
-                final String _url = e.getValue();
 
-                final URL url = new URL(_url);
-                final URLConnection connection = url.openConnection();
-                // trick to get the proper encoding!
-                connection
-                        .setRequestProperty("User-Agent",
-                                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.56 Safari/536.5");
-                //                connection
-                //                .setRequestProperty("User-Agent",
-                //                        "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1");
+                final HTTPRequest req = new HTTPRequest(new URL(lg2url.getValue()));
+                req.addHeader(new HTTPHeader("User-Agent", // trick to get the proper encoding
+                        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.56 Safari/536.5"));
 
-                final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(),
-                        UTF8));
+                final Future<HTTPResponse> future = service.fetchAsync(req);
 
-                final StringBuilder sb = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-                reader.close();
-
-                final String result = sb.toString();
-                if (isDevelopmentEnvironment) {
-                    System.out.println(result);
-                }
-                lg2result.put(lg.toString(), result);
+                futures.add(future);
+                future2lg.put(future, lg2url.getKey());
 
             } catch (final MalformedURLException ex) {
                 LOG.log(Level.SEVERE, "ouch!", ex);
                 throw new RuntimeException(ex);
+            }
+        }
+
+        boolean allFuturesAreDone = false;
+        while (!allFuturesAreDone) {
+
+            try {
+                Thread.sleep(10);
+            } catch (final InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            boolean areDone = true;
+            for (final Future<HTTPResponse> f : futures) {
+                areDone &= f.isDone();
+            }
+
+            allFuturesAreDone = areDone;
+        }
+
+        final HashMap<String, String> lg2result = new HashMap<String, String>();
+
+        for (final Future<HTTPResponse> future : futures) {
+            try {
+
+                final ByteArrayInputStream bais = new ByteArrayInputStream(futureGet(future).getContent());
+                final BufferedReader reader = new BufferedReader(new InputStreamReader(bais, UTF8));
+
+                final StringBuilder sb = new StringBuilder();
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                reader.close();
+
+                final String tsl = sb.toString();
+
+                if (isDevelopmentEnvironment) {
+                    System.out.println(tsl);
+                }
+
+                lg2result.put(future2lg.get(future).toString(), tsl);
 
             } catch (final IOException ex) {
                 LOG.log(Level.SEVERE, "ouch!", ex);
                 throw new RuntimeException(ex);
             }
-            // TODO PGU to delete when ui testing is done
-            // break; // just one request for testing
         }
+
         return lg2result;
     }
 
-    private static boolean isDevelopmentEnvironment() {
+    private URLFetchService getUrlFetchService() {
+        return URLFetchServiceFactory.getURLFetchService();
+    }
+
+    private HTTPResponse futureGet(final Future<HTTPResponse> future) {
+        HTTPResponse httpResponse;
+        try {
+            httpResponse = future.get();
+        } catch (final InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (final ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+        return httpResponse;
+    }
+
+    private boolean isDevelopmentEnvironment() {
         return SystemProperty.environment.value() != SystemProperty.Environment.Value.Production;
     }
 
     @Override
     public String detectLanguage(final String word) {
-        final boolean isDevelopmentEnvironment = isDevelopmentEnvironment();
 
-        final String _url = LG.en.q(word, null);
         try {
-            final URL url = new URL(_url);
+
+            final URL url = new URL(LG.en.q(word, null));
             final URLConnection connection = url.openConnection();
             connection
                     .setRequestProperty("User-Agent",
                             "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.56 Safari/536.5");
+
             final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), UTF8));
 
             final String line = reader.readLine();
@@ -152,7 +202,7 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
 
             final String lg = extractDetectedLanguage(line);
 
-            if (isDevelopmentEnvironment) {
+            if (isDevelopmentEnvironment()) {
                 System.out.println("lg: " + lg);
             }
 
