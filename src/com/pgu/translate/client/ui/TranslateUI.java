@@ -70,7 +70,7 @@ public class TranslateUI extends Composite {
     public TranslateUI() {
         initWidget(uiBinder.createAndBindUi(this));
 
-        inputWord.getElement().setAttribute("placeholder", "Welcome");
+        inputWord.getElement().setAttribute("placeholder", "Text to translate");
 
         progressWidths.add(style.progress0());
         progressWidths.add(style.progress20());
@@ -207,9 +207,10 @@ public class TranslateUI extends Composite {
         btnSend.setEnabled(true);
 
         for (final String containerId : resultContainerIds) {
-
             cleanContainerResult(containerId);
+        }
 
+        for (final String containerId : resultContainerIds) {
             if (lg2result.containsKey(containerId)) {
                 renderResult(wordToTranslateValid, containerId, lg2result.get(containerId));
             }
@@ -219,10 +220,11 @@ public class TranslateUI extends Composite {
 
     private void cleanContainerResult(final String lgName) {
         final Element container = DOM.getElementById(lgName);
-        final int count = container.getChildCount();
-        for (int i = count - 1; i >= 0; i--) {
-            container.removeChild(container.getChild(i));
-        }
+        container.setInnerHTML("");
+        //        final int count = container.getChildCount();
+        //        for (int i = count - 1; i >= 0; i--) {
+        //            container.removeChild(container.getChild(i));
+        //        }
     }
 
     // [
