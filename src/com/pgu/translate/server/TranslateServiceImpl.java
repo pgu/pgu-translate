@@ -86,8 +86,7 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
 
     }
 
-    @Override
-    public HashMap<String, String> translate(final String word, final String source) {
+    private HashMap<String, String> translateMock(final String word, final String source) {
         final HashMap<String, String> lg2result = new HashMap<String, String>();
 
         if (source.equals("en")) {
@@ -105,7 +104,8 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
         return lg2result;
     }
 
-    private HashMap<String, String> translateX(final String word, final String source) {
+    @Override
+    public HashMap<String, String> translate(final String word, final String source) {
 
         final boolean isDevelopmentEnvironment = isDevelopmentEnvironment();
         final URLFetchService service = getUrlFetchService();
@@ -202,15 +202,12 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
         return SystemProperty.environment.value() != SystemProperty.Environment.Value.Production;
     }
 
-    private static int counter = 0;
+    //    private static int counter = 0;
+    //        counter++;
+    //        return counter % 2 == 0 ? "en" : "it";
 
     @Override
     public String detectLanguage(final String word) {
-        counter++;
-        return counter % 2 == 0 ? "en" : "it";
-    }
-
-    private String detectLanguageX(final String word) {
         try {
 
             final URL url = new URL(LG.en.q(word, null));
