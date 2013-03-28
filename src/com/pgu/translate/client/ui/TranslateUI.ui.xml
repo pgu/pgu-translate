@@ -32,6 +32,7 @@
             padding-left: 10px !important;
         }
         .inputWord {
+            line-height: 1.5 !important;
             height: 48px !important;
             width: 97%;
             float: right;
@@ -60,11 +61,16 @@
         .resultsContainer {
             font-size: large !important;
         }
+        .sourceLabel {
+            vertical-align: middle;
+            color: #CCC;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.full_width}">
         <g:HTMLPanel addStyleNames="{style.toolbar}">
-            <g:TextBox ui:field="inputWord" addStyleNames="{style.space} {style.font_25} {style.inputWord}">welcome</g:TextBox>
+            <g:TextBox ui:field="inputWord" addStyleNames="{style.space} {style.font_25} {style.inputWord}"></g:TextBox>
             <div class="{style.float_right}">
+              <span class="{style.font_25} {style.space} {style.sourceLabel}">source language</span>
               <g:ListBox ui:field="source" addStyleNames=" {style.selectSource} {style.space} {style.font_25}"></g:ListBox>
               <g:Anchor ui:field="btnSend" href="javascript:void(0)" addStyleNames="btn btn-primary btn-large {style.font_25}">>></g:Anchor>
             </div>

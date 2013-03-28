@@ -70,6 +70,8 @@ public class TranslateUI extends Composite {
     public TranslateUI() {
         initWidget(uiBinder.createAndBindUi(this));
 
+        inputWord.getElement().setAttribute("placeholder", "Welcome");
+
         progressWidths.add(style.progress0());
         progressWidths.add(style.progress20());
         progressWidths.add(style.progress40());

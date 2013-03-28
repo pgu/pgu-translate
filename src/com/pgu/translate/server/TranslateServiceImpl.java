@@ -88,6 +88,24 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
 
     @Override
     public HashMap<String, String> translate(final String word, final String source) {
+        final HashMap<String, String> lg2result = new HashMap<String, String>();
+
+        if (source.equals("en")) {
+            lg2result.put("fr", "[[[\"歓迎\",\"" + word + "\",\"Bienvenue\",\"\"]],[[\"nom\",[\"歓迎\",\"ウエルカム\",\"接待\",\"奉迎\",\"優待\",\"遠見\"],[[\"歓迎\",[\"" + word + "\",\"reception\"]],[\"ウエルカム\",[\"" + word + "\"]],[\"接待\",[\"reception\",\"" + word + "\",\"serving\"]],[\"奉迎\",[\"" + word + "\"]],[\"優待\",[\"preferential treatment\",\"hospitality\",\"" + word + "\",\"warm reception\"]],[\"遠見\",[\"audience\",\"guest-night\",\"reception\",\"social\",\"" + word + "\",\"ball\"]]]],[\"interjection\",[\"ようこそ\",\"おいでやす\",\"おこしやす\"],[[\"ようこそ\",[\"" + word + "\",\"nice to see you\"]],[\"おいでやす\",[\"" + word + "\"]],[\"おこしやす\",[\"" + word + "\"]]]],[\"verbe\",[\"歓迎する\"],[[\"歓迎する\",[\"" + word + "\",\"acclaim\"]]]]],\"en\",,[[\"歓迎\",[5],0,0,517,0,1,0]],[[\"" + word + "\",4,,,\"\"],[\"" + word + "\",5,[[\"歓迎\",517,0,0],[\"ようこそ\",386,0,0],[\"ウェルカム\",95,0,0],[\"歓迎さ\",0,0,0]],[[0,7]],\"" + word + "\"]],,,[[\"en\"]],47]");
+            lg2result.put("it", "[[[\"歓迎\",\"" + word + "\",\"Benvenido\",\"\"]],[[\"nom\",[\"歓迎\",\"ウエルカム\",\"接待\",\"奉迎\",\"優待\",\"遠見\"],[[\"歓迎\",[\"" + word + "\",\"reception\"]],[\"ウエルカム\",[\"" + word + "\"]],[\"接待\",[\"reception\",\"" + word + "\",\"serving\"]],[\"奉迎\",[\"" + word + "\"]],[\"優待\",[\"preferential treatment\",\"hospitality\",\"" + word + "\",\"warm reception\"]],[\"遠見\",[\"audience\",\"guest-night\",\"reception\",\"social\",\"" + word + "\",\"ball\"]]]],[\"interjection\",[\"ようこそ\",\"おいでやす\",\"おこしやす\"],[[\"ようこそ\",[\"" + word + "\",\"nice to see you\"]],[\"おいでやす\",[\"" + word + "\"]],[\"おこしやす\",[\"" + word + "\"]]]],[\"verbe\",[\"歓迎する\"],[[\"歓迎する\",[\"" + word + "\",\"acclaim\"]]]]],\"en\",,[[\"歓迎\",[5],0,0,517,0,1,0]],[[\"" + word + "\",4,,,\"\"],[\"" + word + "\",5,[[\"歓迎\",517,0,0],[\"ようこそ\",386,0,0],[\"ウェルカム\",95,0,0],[\"歓迎さ\",0,0,0]],[[0,7]],\"" + word + "\"]],,,[[\"en\"]],47]");
+
+        } else if (source.equals("it")) {
+            lg2result.put("fr", "[[[\"歓迎\",\"" + word + "\",\"Bienvenue\",\"\"]],[[\"nom\",[\"歓迎\",\"ウエルカム\",\"接待\",\"奉迎\",\"優待\",\"遠見\"],[[\"歓迎\",[\"" + word + "\",\"reception\"]],[\"ウエルカム\",[\"" + word + "\"]],[\"接待\",[\"reception\",\"" + word + "\",\"serving\"]],[\"奉迎\",[\"" + word + "\"]],[\"優待\",[\"preferential treatment\",\"hospitality\",\"" + word + "\",\"warm reception\"]],[\"遠見\",[\"audience\",\"guest-night\",\"reception\",\"social\",\"" + word + "\",\"ball\"]]]],[\"interjection\",[\"ようこそ\",\"おいでやす\",\"おこしやす\"],[[\"ようこそ\",[\"" + word + "\",\"nice to see you\"]],[\"おいでやす\",[\"" + word + "\"]],[\"おこしやす\",[\"" + word + "\"]]]],[\"verbe\",[\"歓迎する\"],[[\"歓迎する\",[\"" + word + "\",\"acclaim\"]]]]],\"en\",,[[\"歓迎\",[5],0,0,517,0,1,0]],[[\"" + word + "\",4,,,\"\"],[\"" + word + "\",5,[[\"歓迎\",517,0,0],[\"ようこそ\",386,0,0],[\"ウェルカム\",95,0,0],[\"歓迎さ\",0,0,0]],[[0,7]],\"" + word + "\"]],,,[[\"it\"]],47]");
+            lg2result.put("en", "[[[\"歓迎\",\"" + word + "\",\"Welcome\",\"\"]],[[\"nom\",[\"歓迎\",\"ウエルカム\",\"接待\",\"奉迎\",\"優待\",\"遠見\"],[[\"歓迎\",[\"" + word + "\",\"reception\"]],[\"ウエルカム\",[\"" + word + "\"]],[\"接待\",[\"reception\",\"" + word + "\",\"serving\"]],[\"奉迎\",[\"" + word + "\"]],[\"優待\",[\"preferential treatment\",\"hospitality\",\"" + word + "\",\"warm reception\"]],[\"遠見\",[\"audience\",\"guest-night\",\"reception\",\"social\",\"" + word + "\",\"ball\"]]]],[\"interjection\",[\"ようこそ\",\"おいでやす\",\"おこしやす\"],[[\"ようこそ\",[\"" + word + "\",\"nice to see you\"]],[\"おいでやす\",[\"" + word + "\"]],[\"おこしやす\",[\"" + word + "\"]]]],[\"verbe\",[\"歓迎する\"],[[\"歓迎する\",[\"" + word + "\",\"acclaim\"]]]]],\"en\",,[[\"歓迎\",[5],0,0,517,0,1,0]],[[\"" + word + "\",4,,,\"\"],[\"" + word + "\",5,[[\"歓迎\",517,0,0],[\"ようこそ\",386,0,0],[\"ウェルカム\",95,0,0],[\"歓迎さ\",0,0,0]],[[0,7]],\"" + word + "\"]],,,[[\"it\"]],47]");
+
+        } else {
+            throw new UnsupportedOperationException();
+        }
+
+        return lg2result;
+    }
+
+    private HashMap<String, String> translateX(final String word, final String source) {
 
         final boolean isDevelopmentEnvironment = isDevelopmentEnvironment();
         final URLFetchService service = getUrlFetchService();
@@ -184,16 +202,22 @@ public class TranslateServiceImpl extends RemoteServiceServlet implements Transl
         return SystemProperty.environment.value() != SystemProperty.Environment.Value.Production;
     }
 
+    private static int counter = 0;
+
     @Override
     public String detectLanguage(final String word) {
+        counter++;
+        return counter % 2 == 0 ? "en" : "it";
+    }
 
+    private String detectLanguageX(final String word) {
         try {
 
             final URL url = new URL(LG.en.q(word, null));
             final URLConnection connection = url.openConnection();
             connection
-                    .setRequestProperty("User-Agent",
-                            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.56 Safari/536.5");
+            .setRequestProperty("User-Agent",
+                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.56 Safari/536.5");
 
             final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), UTF8));
 
