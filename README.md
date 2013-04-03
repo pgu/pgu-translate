@@ -3,7 +3,7 @@
 <body>
 
 <p>
-  <h3>Purpose</h3>
+<h3>Purpose</h3>
 Multi-translations website focused on the following languages: 
 <ul>
 <li>English</li>
@@ -21,8 +21,13 @@ Multi-translations website focused on the following languages:
 Actually, this is a simple wrapper around the Google&#39;s translation service.
 </p>
 <p>
-	<h3>Technologies</h3>
-Bootstrap, GWT, JSNI, App Engine and its URL Fetch service (<i>async</i> version)
+<h3>Technologies</h3>
+<ul>
+<li>Bootstrap</li>
+<li>GWT</li>
+<li>JSNI</li>
+<li>App Engine and its URL Fetch service (<i>async</i> version)</li>
+</ul>
 </p>
 <p>
 	<h3>Website</h3>
