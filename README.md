@@ -4,8 +4,21 @@
 
 <p>
   <h3>Purpose</h3>
-Multi-translations&#39; website focused on the following languages: en, fr,&nbsp;es,&nbsp;it,&nbsp;de,&nbsp;ja,&nbsp;cn,&nbsp;ko,&nbsp;ru,&nbsp;ar.&nbsp;<br/>
-Actually, this is a simple wrapper around the google&#39;s translation service.
+Multi-translations website focused on the following languages: 
+<ul>
+<li>English</li>
+<li>French</li>
+<li>Spanish</li>
+<li>Italian</li>
+<li>German</li>
+<li>Japanese</li>
+<li>Chinese</li>
+<li>Korean</li>
+<li>Russian</li>
+<li>Arabic</li>
+</ul>
+
+Actually, this is a simple wrapper around the Google&#39;s translation service.
 </p>
 <p>
 	<h3>Technologies</h3>
@@ -15,6 +28,8 @@ Bootstrap, GWT, JSNI, App Engine and its URL Fetch service (<i>async</i> version
 	<h3>Website</h3>
 	<a href="http://pgu-translate.appspot.com/" target="_blank"><strong>&#8594; Translate!</strong></a>
 </p>
-
+<p>
+Note that the style is done for use on a mobile phone.
+</p>
 </body>
 </html>
