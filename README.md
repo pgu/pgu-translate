@@ -1,40 +1,39 @@
-<html>
-<head></head>
-<body>
-
-<p>
-<h3>Purpose</h3>
+Purpose
+---
 Multi-translations website focused on the following languages: 
-<ul>
-<li>English</li>
-<li>French</li>
-<li>Spanish</li>
-<li>Italian</li>
-<li>German</li>
-<li>Japanese</li>
-<li>Chinese</li>
-<li>Korean</li>
-<li>Russian</li>
-<li>Arabic</li>
-</ul>
+
+- English
+- French
+- Spanish
+- Italian
+- German
+- Japanese
+- Chinese
+- Korean
+- Russian
+- Arabic
+
 
 Actually, this is a simple wrapper around the Google&#39;s translation service.
-</p>
-<p>
-<h3>Technologies</h3>
-<ul>
-<li>Bootstrap</li>
-<li>GWT</li>
-<li>JSNI</li>
-<li>App Engine and its URL Fetch service (<i>async</i> version)</li>
-</ul>
-</p>
-<p>
-	<h3>Website</h3>
-	<a href="http://pgu-translate.appspot.com/" target="_blank"><strong>&#8594; Translate!</strong></a>
-</p>
-<p>
+
+Technologies
+---
+
+- [Twitter Bootstrap] [2]
+- [GWT] [1]
+- [JSNI] [3]
+- App Engine and its [URL Fetch service] [4] (<i>async</i> version)
+
+Website
+---
+[<strong>&#8594; Translate!</strong>] [5]
+
+
 Note that the style is done for use on a mobile phone.
-</p>
-</body>
-</html>
+
+[1]: https://developers.google.com/web-toolkit/                                    "GWT"
+[2]: http://twitter.github.io/bootstrap/                                           "Bootstrap"
+[3]: https://developers.google.com/web-toolkit/doc/latest/DevGuideCodingBasicsJSNI "JSNI"
+[4]: https://developers.google.com/appengine/docs/java/urlfetch/overview           "URL fetch service"
+
+[5]: http://pgu-translate.appspot.com/                                             "pgu-translate"
