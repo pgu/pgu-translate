@@ -1,3 +1,7 @@
+Website
+---
+[<strong>&#8594; Translate!</strong>] [pgu_translate]
+
 Purpose
 ---
 Multi-translations website focused on the following languages: 
@@ -23,10 +27,6 @@ Technologies
 - [GWT]
 - [JSNI]
 - App Engine and its [URL Fetch service] [url] (<i>async</i> version)
-
-Website
----
-[<strong>&#8594; Translate!</strong>] [pgu_translate]
 
 
 Note that the style is done for use on a mobile phone.
